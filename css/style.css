@@ -1,0 +1,29 @@
+.image-div{
+    display: inline-block;
+}
+
+fieldset{
+    display: inline;
+    font-family: sans-serif;
+    font-size: 12px;
+}
+
+textarea{
+    width: 100%;
+}
+
+.male-class{
+    background-color: darkblue;
+    color: white;
+}
+
+.female-class{
+    background-color: pink;
+    color: black;
+}
+
+.robot-class{
+    background-color: gray;
+    color: red;
+}
+
