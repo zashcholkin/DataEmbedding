@@ -1,5 +1,7 @@
 var express = require("express");
-var jimp = require("jimp");
+var events = require("events");
+var embeddingMethods = require("./embedding-methods");
+var extractingMethods = require("./extracting-methods");
 
 var app = express();
 
@@ -15,30 +17,41 @@ var storage = multer.diskStorage({
 var upload = multer({storage: storage});
 
 app.use(express.static(__dirname + "/css"));
-app.use(express.static(__dirname + "/libraryes"));
+app.use(express.static(__dirname + "/libraries"));
+app.use(express.static(__dirname + "/result-images"));
 
 
 app.get("/", function (req, res) {
    res.sendFile(__dirname + "/index.html")
 });
 
-app.post("/path1", upload.single("image-file"), function (req, res, next) {
-   jimp.read(__dirname + "/uploads/" + req.file.originalname, function (err, image) {
-       if (err) throw err;
+app.post("/path-emb", upload.single("image-file"), function (req, res, next) {
 
-       for (var i = 0; i < image.bitmap.width; i++)
-           for (var j = 0; j < image.bitmap.height; j++){
-               var color = image.getPixelColor(i, j);
-               var Red = jimp.intToRGBA(color).r;
-               var newColor = jimp.rgbaToInt(Red, 0, 0, 255);
+    var message = req.body["message"];
 
-               image.setPixelColor(newColor, i,j);
-           }
-           image.write(__dirname + "/result-images/" + req.file.originalname);
+    var em = new events.EventEmitter();
+    embeddingMethods.LSBemb(req.file.originalname, message, "Red", em);
 
-       res.send("Result image is ready")
-   });
+    em.on("imageTooSmall", function(){
+        res.send("Image is too slall for this message");
+    });
+
+    em.on("embedReady", function (resultImageName) {
+        res.send(`<a href='${resultImageName}' download="image.png">Result File</a>` );
+    });
 });
+
+
+app.post("/path-extr", upload.single("image-file2"), function (req, res, next) {
+
+    var em = new events.EventEmitter();
+    extractingMethods.LSBextr(req.file.originalname, "Red" ,em);
+    em.on("extrMessageReady", function (extractedMessage) {
+        res.send(`<div>${extractedMessage}</div>`);
+    });
+
+});
+
 
 app.listen(3000, function () {
    console.log("app listen");

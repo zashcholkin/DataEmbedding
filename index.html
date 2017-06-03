@@ -7,15 +7,77 @@
     <script src="jquery-3.1.1.min.js"></script>
 </head>
 <body>
-    <form method="post" action="/path1" id="main-form" enctype="multipart/form-data">
+    <h2>Embedding</h2>
+    <form method="post" action="/path-emb" id="embed-form" enctype="multipart/form-data">
 
-        <input type="file" name="image-file" multiple="multiple">
-        <input type="text" name="message">
+        <input type="file" name="image-file">
+        <label>Message
+            <input type="text" name="message">
+        </label>
+
 
         <input type="submit" value="Upload">
     </form>
 
-    <div id="response-destination-div"></div>
+    <div id="result-image-div"></div>
+
+    <h2>Extracting</h2>
+    <form method="post" action="/path-extr" id="extract-form" enctype="multipart/form-data">
+        <input type="file" name="image-file2" multiple="multiple">
+
+        <input type="submit" value="Upload">
+    </form>
+
+    <div id="extracted-message-div"></div>
+
+
+    <script>
+        $("#embed-form").on("submit", function (event) {
+            event.preventDefault();
+
+            //get data from form inputs for AJAX request
+            var fd = new FormData();
+            fd.append("message", $("input[name='message']").val());
+            fd.append("image-file", $("input[name='image-file']")[0].files[0]);
+
+            $.ajax({
+                url: $(this).attr("action"),
+                type: "post",
+                processData: false,
+                contentType: false,
+                data: fd,
+                success: function(data){
+                    $("#result-image-div").html(data);
+                },
+                error: function () {
+                    $("#result-image-div").text("Error")
+                }
+            });
+        });
+
+
+        $("#extract-form").on("submit", function (event) {
+            event.preventDefault();
+
+            //get data from form inputs for AJAX request
+            var fd = new FormData();
+            fd.append("image-file2", $("input[name='image-file2']")[0].files[0]);
+
+            $.ajax({
+                url: $(this).attr("action"),
+                type: "post",
+                processData: false,
+                contentType: false,
+                data: fd,
+                success: function(data){
+                    $("#extracted-message-div").html(data);
+                },
+                error: function () {
+                    $("#extracted-message-div").text("Error")
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>
