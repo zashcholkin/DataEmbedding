@@ -28,9 +28,10 @@ app.get("/", function (req, res) {
 app.post("/path-emb", upload.single("image-file"), function (req, res, next) {
 
     var message = req.body["message"];
+    var colorChannel = req.body["color-channel"];
 
     var em = new events.EventEmitter();
-    embeddingMethods.LSBemb(req.file.originalname, message, "Red", em);
+    embeddingMethods.LSBemb(req.file.originalname, message, colorChannel, em);
 
     em.on("imageTooSmall", function(){
         res.send("Image is too slall for this message");
@@ -44,8 +45,10 @@ app.post("/path-emb", upload.single("image-file"), function (req, res, next) {
 
 app.post("/path-extr", upload.single("image-file2"), function (req, res, next) {
 
+    var colorChannel = req.body["color-channel-extr"];
+
     var em = new events.EventEmitter();
-    extractingMethods.LSBextr(req.file.originalname, "Red" ,em);
+    extractingMethods.LSBextr(req.file.originalname, colorChannel,em);
     em.on("extrMessageReady", function (extractedMessage) {
         res.send(`<div>${extractedMessage}</div>`);
     });

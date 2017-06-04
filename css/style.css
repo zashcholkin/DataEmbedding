@@ -1,3 +1,41 @@
+body, html {
+    height: 100%;
+}
+
+#emb-btn,
+#extr-btn{
+    display: block;
+    margin-bottom: 10%;
+    height: 2em;
+    width: 8em;
+    font-size: 1.5em;
+    background-color: white;
+    border: 1px solid #ccc;
+}
+
+#emb-btn{
+    border-radius: 5px 0 0 5px;
+}
+
+#extr-btn{
+    border-radius: 0 5px 5px 0;
+}
+
+
+
+#start-div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+#emb-div,
+#extr-div
+{
+    display: none;
+}
+
 .image-div{
     display: inline-block;
 }
@@ -10,20 +48,5 @@ fieldset{
 
 textarea{
     width: 100%;
-}
-
-.male-class{
-    background-color: darkblue;
-    color: white;
-}
-
-.female-class{
-    background-color: pink;
-    color: black;
-}
-
-.robot-class{
-    background-color: gray;
-    color: red;
 }
 

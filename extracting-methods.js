@@ -17,9 +17,9 @@ function LSBextr(imageFilename, colorChannel, em) {
         for (var i = 0; i < image.bitmap.width; i++)
             for (var j = 0; j < image.bitmap.height; j++) {
                 var color = image.getPixelColor(i, j);
-                var R = jimp.intToRGBA(color).r;
+                var workChannelValue = jimp.intToRGBA(color)[colorChannel];
 
-                var lowBit = R & 1;
+                var lowBit = workChannelValue & 1;
 
                 if(messageLengthReady == false){
                     binMessageLengthArr.push(lowBit);

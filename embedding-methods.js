@@ -16,16 +16,20 @@ function LSBemb(imageFilename, message, colorChannel, em) {
         var messageBinArr = stringToBin(message); //length in bin format + message in bin format
 
         var n = 0;
+        var colorObj = {};
         for (var i = 0; i < image.bitmap.width; i++)
             for (var j = 0; j < image.bitmap.height; j++) {
                 var color = image.getPixelColor(i, j);
-                var R = jimp.intToRGBA(color).r;
-                var G = jimp.intToRGBA(color).g;
-                var B = jimp.intToRGBA(color).b;
+                colorObj.r = jimp.intToRGBA(color).r;
+                colorObj.g = jimp.intToRGBA(color).g;
+                colorObj.b = jimp.intToRGBA(color).b;
 
-                var newR = embed(R, messageBinArr[n]);
+                var workChannelValue = jimp.intToRGBA(color)[colorChannel];
+                var resultWorkChannelValue = embed(workChannelValue, messageBinArr[n]);
+                colorObj[colorChannel] = resultWorkChannelValue;
 
-                var newColor = jimp.rgbaToInt(newR, G, B, 255);
+                var newColor = jimp.rgbaToInt(colorObj.r, colorObj.g, colorObj.b, 255);
+
                 image.setPixelColor(newColor, i, j);
 
                 n++;
