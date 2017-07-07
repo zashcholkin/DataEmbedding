@@ -13,6 +13,13 @@ body, html {
     border: 1px solid #ccc;
 }
 
+#emb-btn:hover,
+#extr-btn:hover{
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
+
+
 #emb-btn{
     border-radius: 5px 0 0 5px;
 }
@@ -22,12 +29,23 @@ body, html {
 }
 
 
-
 #start-div{
     display: flex;
     align-items: center;
     justify-content: center;
     height: 100%;
+}
+
+@media all and (max-width: 420px){
+    #start-div{
+        display: block;
+    }
+
+    #emb-btn,
+    #extr-btn{
+        margin-bottom: 0;
+        width: 100%;
+    }
 }
 
 #emb-div,
@@ -40,13 +58,58 @@ body, html {
     display: inline-block;
 }
 
-fieldset{
-    display: inline;
-    font-family: sans-serif;
-    font-size: 12px;
-}
-
 textarea{
     width: 100%;
 }
 
+/*Embedding page*/
+.step-body{
+    margin-bottom: 10px;
+}
+
+.step-header{
+    display: inline-block;
+    padding: 10px;
+    background-color: gold;
+    border: 1px solid #ccc;
+    border-radius: 10px 0 0 10px;
+}
+
+#image-before-embedding{
+    width: 25%;
+    height: 25%;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 4px;
+    margin: 0 0 10px 5%
+}
+
+input[type='radio']{
+    margin-right: 15px;
+    margin-left: 3px;
+}
+
+.substep-body{
+    margin: 10px 0 0 5%;
+}
+
+.substep-header{
+    display: inline-block;
+    background-color: lemonchiffon;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+}
+
+.interval-mode{
+    margin-left: 8%;
+}
+
+.substep-body input[type='number']{
+    width: 3em;
+}
+
+#color-channel-div{
+    background-color: darkred;
+    color: white;
+}

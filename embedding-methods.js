@@ -1,8 +1,9 @@
 var jimp = require("jimp");
+var rndGenerator = require("random-seed").create();
 const BITS_PER_CHAR = require("./config").config.BITS_PER_CHAR;
 const BITS_FOR_MESSAGE_LENGTH = require("./config").config.BITS_FOR_MESSAGE_LENGTH;
 
-function LSBemb(imageFilename, message, colorChannel, em) {
+function LSBemb(imageFilename, message, key, em) {
     var sourcePath = __dirname + "/uploads/" + imageFilename;
 
     jimp.read(sourcePath, function (err, image) {
@@ -13,27 +14,108 @@ function LSBemb(imageFilename, message, colorChannel, em) {
             return;
         }
 
-        var messageBinArr = stringToBin(message); //length in bin format + message in bin format
+        var messageBinArr = stringToBin(message); //(length in bin format + message) -> bin format
+        var amountOfBitsInMessage = messageBinArr.length;
 
         var n = 0;
         var colorObj = {};
-        for (var i = 0; i < image.bitmap.width; i++)
-            for (var j = 0; j < image.bitmap.height; j++) {
-                var color = image.getPixelColor(i, j);
-                colorObj.r = jimp.intToRGBA(color).r;
-                colorObj.g = jimp.intToRGBA(color).g;
-                colorObj.b = jimp.intToRGBA(color).b;
 
-                var workChannelValue = jimp.intToRGBA(color)[colorChannel];
-                var resultWorkChannelValue = embed(workChannelValue, messageBinArr[n]);
-                colorObj[colorChannel] = resultWorkChannelValue;
+        if(key.mode == "sequential") {
+            outer:
+            for (var i = 0; i < image.bitmap.width; i++)
+                for (var j = 0; j < image.bitmap.height; j++) {
 
-                var newColor = jimp.rgbaToInt(colorObj.r, colorObj.g, colorObj.b, 255);
+                if(amountOfBitsInMessage == n){
+                    break outer;
+                }
 
-                image.setPixelColor(newColor, i, j);
+                    var color = image.getPixelColor(i, j);
+                    colorObj.r = jimp.intToRGBA(color).r;
+                    colorObj.g = jimp.intToRGBA(color).g;
+                    colorObj.b = jimp.intToRGBA(color).b;
 
-                n++;
-            }
+                    var workChannelValue = jimp.intToRGBA(color)[key.colorChannel];
+                    var resultWorkChannelValue = embed(workChannelValue, messageBinArr[n]);
+                    colorObj[key.colorChannel] = resultWorkChannelValue;
+
+                    var newColor = jimp.rgbaToInt(colorObj.r, colorObj.g, colorObj.b, 255);
+
+                    image.setPixelColor(newColor, i, j);
+
+                    n++;
+                }
+        }
+        else if(key.mode == "fixed"){
+            var count = key.fixedIntervalAmount;
+
+            outerFixed:
+            for (var i = 0; i < image.bitmap.width; i++)
+                for (var j = 0; j < image.bitmap.height; j++) {
+
+                    if(amountOfBitsInMessage == n){
+                        break outerFixed;
+                    }
+
+                    if (count != 0) {
+                        count--;
+                    }
+                    else {
+                        count = key.fixedIntervalAmount;
+
+                        var color = image.getPixelColor(i, j);
+                        colorObj.r = jimp.intToRGBA(color).r;
+                        colorObj.g = jimp.intToRGBA(color).g;
+                        colorObj.b = jimp.intToRGBA(color).b;
+
+                        var workChannelValue = jimp.intToRGBA(color)[key.colorChannel];
+                        var resultWorkChannelValue = embed(workChannelValue, messageBinArr[n]);
+                        colorObj[key.colorChannel] = resultWorkChannelValue;
+
+                        var newColor = jimp.rgbaToInt(colorObj.r, colorObj.g, colorObj.b, 255);
+
+                        image.setPixelColor(newColor, i, j);
+
+                        n++;
+                    }
+                }
+        }
+        else if(key.mode == "random"){
+            rndGenerator.seed(key.randomintervalSeed);
+
+            var count = rndGenerator.intBetween(+key.randomintervalMin, +key.randomintervalMax);
+
+            outerRandom:
+            for (var i = 0; i < image.bitmap.width; i++)
+                for (var j = 0; j < image.bitmap.height; j++) {
+
+                    if(amountOfBitsInMessage == n){
+                        break outerRandom;
+                    }
+
+                    if (count != 0) {
+                        count--;
+                    }
+                    else {
+                        count = rndGenerator.intBetween(+key.randomintervalMin, +key.randomintervalMax);
+
+                        var color = image.getPixelColor(i, j);
+                        colorObj.r = jimp.intToRGBA(color).r;
+                        colorObj.g = jimp.intToRGBA(color).g;
+                        colorObj.b = jimp.intToRGBA(color).b;
+
+                        var workChannelValue = jimp.intToRGBA(color)[key.colorChannel];
+                        var resultWorkChannelValue = embed(workChannelValue, messageBinArr[n]);
+                        colorObj[key.colorChannel] = resultWorkChannelValue;
+
+                        var newColor = jimp.rgbaToInt(colorObj.r, colorObj.g, colorObj.b, 255);
+
+                        image.setPixelColor(newColor, i, j);
+
+                        n++;
+                    }
+                }
+
+        }
 
         image.write(__dirname + "/result-images/" + imageFilename, function(err){
             em.emit("embedReady", imageFilename);

@@ -2,160 +2,284 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>WebGraphics</title>
 
-    <link rel="stylesheet" href="style.css">
-    <script src="jquery-3.1.1.min.js"></script>
+    <!--
+    <link rel="stylesheet" href="css/style.css">
+    <script src="libraries/jquery-3.1.1.min.js"></script>
+    !-->
 
-</head>
-<body>
+        <link rel="stylesheet" href="style.css">
+        <script src="jquery-3.1.1.min.js"></script>
 
-   <div id="start-div">
-       <input type="button" value="Embedding" id="emb-btn">
-       <input type="button" value="Extracting" id="extr-btn">
-   </div>
+    </head>
+    <body>
+
+       <div id="start-div">
+           <input type="button" value="Embedding" id="emb-btn">
+           <input type="button" value="Extracting" id="extr-btn">
+       </div>
 
 
-    <div id="emb-div">
+        <div id="emb-div">
             <h2>Embedding</h2>
-        <form method="post" action="/path-emb" id="embed-form" enctype="multipart/form-data">
+            <form method="post" action="/path-emb" id="embed-form" enctype="multipart/form-data">
 
-            <input type="file" name="image-file">
+                <div class="step-body">
+                    <div class="step-header">
+                        Step 1. Select image file (png or bmp)
+                    </div>
+                    <input type="file" id="emb-image-file" name="image-file">
+                </div>
 
-            <fieldset>
-                <legend>Color Channel</legend>
-                <label>Red
-                    <input type="radio" name="color-channel" value="r" checked>
-                </label>
+                <img id="image-before-embedding">
 
-                <label>Green
-                    <input type="radio" name="color-channel" value="g">
-                </label>
+                <div class="step-body">
+                    <div class="step-header">Step 2. Select Key</div>
+                </div>
 
-                <label>Blue
-                    <input type="radio" name="color-channel" value="b">
-                </label>
-            </fieldset>
+                <div class="substep-body">
+                    <div class="substep-header" id="color-channel-div">Color channel</div>
+                    <label>Red<input type="radio" name="color-channel" value="r" checked>
+                    </label>
 
-            <label>Message
-                <input type="text" name="message">
-            </label>
+                    <label>Green<input type="radio" name="color-channel" value="g">
+                    </label>
 
+                    <label>Blue<input type="radio" name="color-channel" value="b">
+                    </label>
+                </div>
 
-            <input type="submit" value="Upload">
-        </form>
+                <div class="substep-body interval-mode">
+                    <div class="substep-header">
+                        <label>
+                        <input type="radio" name="interval-mode" value="sequential" checked>
+                        Sequential embedding (without gaps between pixels for embedding)
+                        </label>
+                    </div>
+                </div>
 
+                <div class="substep-body interval-mode">
+                    <div class="substep-header">
+                         <label>
+                             <input type="radio" name="interval-mode" value="fixed">
+                             Fixed pixel interval
+                         </label>
+                    </div>
+                     <input type="number" name="finterval-amount" value="1">
+                </div>
 
-            <div id="result-image-div"></div>
-    </div>
+                <div class="substep-body interval-mode">
+                     <div class="substep-header">
+                        <label>
+                            <input type="radio" name="interval-mode" value="random">
+                            Random pixel interval
+                        </label>
+                     </div>
+                    Min interval value <input type="number" name="rinterval-min" value="0">
 
-    <div id="extr-div">
-            <h2>Extracting</h2>
-        <form method="post" action="/path-extr" id="extract-form" enctype="multipart/form-data">
-            <input type="file" name="image-file2" multiple="multiple">
+                    Max interval value <input type="number" name="rinterval-max" value="1">
 
-            <fieldset>
-                <legend>Color Channel</legend>
-                <label>Red
-                    <input type="radio" name="color-channel-extr" value="r" checked>
-                </label>
-
-                <label>Green
-                    <input type="radio" name="color-channel-extr" value="g">
-                </label>
-
-                <label>Blue
-                    <input type="radio" name="color-channel-extr" value="b">
-                </label>
-            </fieldset>
-
-            <input type="submit" value="Upload">
-        </form>
-
-        <div id="extracted-message-div"></div>
-    </div>
+                    Random generator Seed<input type="number" name="rinterval-seed" value="5">
+                </div>
 
 
-    <script>
-        $("#emb-btn").on("click", function () {
-                $("#emb-div").show();
-                $("#extr-div").hide();
+                <div class="step-body">
+                    <div class="step-header">Step 3. Input message</div>
+                        <input type="text" name="message">
+                </div>
+
+
+                <div class="step-body">
+                    <div class="step-header">Step 4. Upload Image and Message</div>
+                    <input type="submit" value="Upload">
+                </div>
+            </form>
+
+
+                <div id="result-image-div">
+
+                </div>
+        </div>
+
+        <div id="extr-div">
+                <h2>Extracting</h2>
+            <form method="post" action="/path-extr" id="extract-form" enctype="multipart/form-data">
+                <input type="file" name="image-file2" multiple="multiple">
+
+                <fieldset>
+                    <legend>Color Channel</legend>
+                    <label>Red
+                        <input type="radio" name="color-channel" value="r" checked>
+                    </label>
+
+                    <label>Green
+                        <input type="radio" name="color-channel" value="g">
+                    </label>
+
+                    <label>Blue
+                        <input type="radio" name="color-channel" value="b">
+                    </label>
+                </fieldset>
+
+                <div class="substep-body interval-mode">
+                    <div class="substep-header">
+                        <label>
+                            <input type="radio" name="interval-mode" value="sequential" checked>
+                            Sequential embedding (without gaps between pixels for embedding)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="substep-body interval-mode">
+                    <div class="substep-header">
+                        <label>
+                            <input type="radio" name="interval-mode" value="fixed">
+                            Fixed pixel interval
+                        </label>
+                    </div>
+                    <input type="number" name="finterval-amount" value="1">
+                </div>
+
+                <div class="substep-body interval-mode">
+                    <div class="substep-header">
+                        <label>
+                            <input type="radio" name="interval-mode" value="random">
+                            Random pixel interval
+                        </label>
+                    </div>
+                    Min interval value <input type="number" name="rinterval-min" value="0">
+
+                    Max interval value <input type="number" name="rinterval-max" value="1">
+
+                    Random generator Seed<input type="number" name="rinterval-seed" value="5">
+                </div>
+
+                <input type="submit" value="Upload">
+            </form>
+
+            <div id="extracted-message-div"></div>
+        </div>
+
+
+        <script>
+            $("#emb-btn").on("click", function () {
+                    $("#emb-div").show();
+                    $("#extr-div").hide();
+                    $("#start-div").hide();
+                    $("#image-before-embedding").hide();
+            });
+
+            $("#extr-btn").on("click", function () {
+                $("#emb-div").hide();
+                $("#extr-div").show();
                 $("#start-div").hide();
-        });
-
-        $("#extr-btn").on("click", function () {
-            $("#emb-div").hide();
-            $("#extr-div").show();
-            $("#start-div").hide();
-        });
-
-
-        $("#embed-form").on("submit", function (event) {
-            event.preventDefault();
-
-            var imageFile = $("input[name='image-file']");
-            if(imageFile.val() == ""){
-                alert("Image file wasn't selected");
-                return false;
-            }
-
-            var message = $("input[name='message']").val();
-            if(message == ""){
-                alert("Message is absent");
-                return false;
-            }
-
-            //get data from form inputs for AJAX request
-            var fd = new FormData();
-            fd.append("message", message);
-            fd.append("color-channel", $("input[name='color-channel']:checked").val());
-            fd.append("image-file", imageFile[0].files[0]);
-
-            $.ajax({
-                url: $(this).attr("action"),
-                type: "post",
-                processData: false,
-                contentType: false,
-                data: fd,
-                success: function(data){
-                    $("#result-image-div").html(data);
-                },
-                error: function () {
-                    $("#result-image-div").text("Error")
-                }
             });
-        });
 
+            $("#emb-image-file").on("change", function () {
 
-        $("#extract-form").on("submit", function (event) {
-            event.preventDefault();
+                var reader = new FileReader();
+                reader.onload = function(e){
+                    $("#image-before-embedding")
+                        .show()
+                        .attr("src", e.target.result);
+                };
 
-            var imageFile = $("input[name='image-file2']");
-            if(imageFile.val() == ""){
-                alert("Image file wasn't selected");
-                return false;
-            }
-
-            //get data from form inputs for AJAX request
-            var fd = new FormData();
-            fd.append("image-file2", imageFile[0].files[0]);
-            fd.append("color-channel-extr", $("input[name='color-channel-extr']:checked").val());
-
-            $.ajax({
-                url: $(this).attr("action"),
-                type: "post",
-                processData: false,
-                contentType: false,
-                data: fd,
-                success: function(data){
-                    $("#extracted-message-div").html(data);
-                },
-                error: function () {
-                    $("#extracted-message-div").text("Error")
-                }
+                reader.readAsDataURL(this.files[0]);
             });
-        });
-    </script>
 
-</body>
-</html>
+
+
+            $("#embed-form").on("submit", function (event) {
+                event.preventDefault();
+
+                var imageFile = $("input[name='image-file']");
+                if(imageFile.val() == ""){
+                    alert("Image file wasn't selected");
+                    return false;
+                }
+
+                var message = $("input[name='message']").val();
+                if(message == ""){
+                    alert("Message is absent");
+                    return false;
+                }
+
+                //get data from form inputs for AJAX request
+                var embedForm = $("#embed-form")[0];
+                var fd = new FormData(embedForm);
+                /*
+                fd.append("message", message);
+                fd.append("color-channel", $("input[name='color-channel']:checked").val());
+
+                fd.append("image-file", imageFile[0].files[0]);
+                */
+
+                $.ajax({
+                    url: $(this).attr("action"),
+                    type: "post",
+                    processData: false,
+                    contentType: false,
+                    data: fd,
+                    success: function(data){
+                        $("#result-image-div").html(data);
+                    },
+                    error: function () {
+                        $("#result-image-div").text("Error")
+                    }
+                });
+            });
+
+
+            $("#extract-form").on("submit", function (event) {
+                event.preventDefault();
+
+                var imageFile = $("input[name='image-file2']");
+                if(imageFile.val() == ""){
+                    alert("Image file wasn't selected");
+                    return false;
+                }
+
+                //get data from form inputs for AJAX request
+                var extrForm = $("#extract-form")[0];
+                var fd = new FormData(extrForm);
+                /*
+                fd.append("image-file2", imageFile[0].files[0]);
+                fd.append("color-channel-extr", $("input[name='color-channel-extr']:checked").val());
+                */
+
+                $.ajax({
+                    url: $(this).attr("action"),
+                    type: "post",
+                    processData: false,
+                    contentType: false,
+                    data: fd,
+                    success: function(data){
+                        $("#extracted-message-div").html(data);
+                    },
+                    error: function () {
+                        $("#extracted-message-div").text("Error")
+                    }
+                });
+            });
+
+            var colorChannelDiv = $("#color-channel-div");
+            $("input[name='color-channel']").on("change", function () {
+               switch ($("input[name='color-channel']:checked").val()){
+                   case "r":
+                       colorChannelDiv.css("background-color", "darkred");
+                       break;
+                   case "g":
+                       colorChannelDiv.css("background-color", "yellowgreen");
+                       break;
+                   case "b":
+                       colorChannelDiv.css("background-color", "darkblue");
+                       break;
+               }
+            });
+
+        </script>
+
+    </body>
+    </html>

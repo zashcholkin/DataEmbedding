@@ -28,13 +28,13 @@ app.get("/", function (req, res) {
 app.post("/path-emb", upload.single("image-file"), function (req, res, next) {
 
     var message = req.body["message"];
-    var colorChannel = req.body["color-channel"];
+    var keyObj = createKey(req);
 
     var em = new events.EventEmitter();
-    embeddingMethods.LSBemb(req.file.originalname, message, colorChannel, em);
+    embeddingMethods.LSBemb(req.file.originalname, message, keyObj, em);
 
     em.on("imageTooSmall", function(){
-        res.send("Image is too slall for this message");
+        res.send("Image is too small for this message");
     });
 
     em.on("embedReady", function (resultImageName) {
@@ -45,10 +45,11 @@ app.post("/path-emb", upload.single("image-file"), function (req, res, next) {
 
 app.post("/path-extr", upload.single("image-file2"), function (req, res, next) {
 
-    var colorChannel = req.body["color-channel-extr"];
+    //var colorChannel = req.body["color-channel-extr"];
+    var keyObj = createKey(req);
 
     var em = new events.EventEmitter();
-    extractingMethods.LSBextr(req.file.originalname, colorChannel,em);
+    extractingMethods.LSBextr(req.file.originalname, keyObj, em);
     em.on("extrMessageReady", function (extractedMessage) {
         res.send(`<div>${extractedMessage}</div>`);
     });
@@ -59,3 +60,27 @@ app.post("/path-extr", upload.single("image-file2"), function (req, res, next) {
 app.listen(3000, function () {
    console.log("app listen");
 });
+
+function createKey(req){
+    var key = {};
+
+    key.colorChannel = req.body["color-channel"];
+
+    var intervalMode = req.body["interval-mode"]; //sequential|fixed|random
+
+    if(intervalMode == "sequential"){
+        key.mode = "sequential";
+    }
+    else if(intervalMode == "fixed"){
+        key.mode = "fixed";
+        key.fixedIntervalAmount = req.body["finterval-amount"];
+    }
+    else if(intervalMode == "random"){
+        key.mode = "random";
+        key.randomintervalMin = req.body["rinterval-min"];
+        key.randomintervalMax = req.body["rinterval-max"];
+        key.randomintervalSeed = req.body["rinterval-seed"];
+    }
+
+    return key;
+}
