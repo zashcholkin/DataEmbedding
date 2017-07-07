@@ -34,7 +34,7 @@ app.post("/path-emb", upload.single("image-file"), function (req, res, next) {
     embeddingMethods.LSBemb(req.file.originalname, message, keyObj, em);
 
     em.on("imageTooSmall", function(){
-        res.send("Image is too small for this message");
+        res.send("Image is too small for this message and key parameters");
     });
 
     em.on("embedReady", function (resultImageName) {

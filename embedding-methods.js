@@ -9,7 +9,7 @@ function LSBemb(imageFilename, message, key, em) {
     jimp.read(sourcePath, function (err, image) {
         if (err) throw err;
 
-        if(sizeEstimate(image, message) == false){
+        if(sizeEstimate(image, message, key) == false){
             em.emit("imageTooSmall");
             return;
         }
@@ -129,12 +129,28 @@ var embeddingMethods = {
 module.exports = embeddingMethods;
 
 
-function sizeEstimate(image, message){
+function sizeEstimate(image, message, key){
 
-    var pixelsAmount = image.bitmap.width * image.bitmap.height;
     var bitsAmount = message.length * BITS_PER_CHAR + BITS_FOR_MESSAGE_LENGTH;
+    var pixelsAmount = image.bitmap.width * image.bitmap.height;
+    var pixelsAmountNeed = 0;
 
-    return pixelsAmount > bitsAmount; //if pixelsAmount > bitsAmount return true else return false
+    if(key.mode == "sequential"){
+        pixelsAmountNeed = bitsAmount;
+    }
+    else if(key.mode == "fixed"){
+        pixelsAmountNeed = bitsAmount * (+key.fixedIntervalAmount + 1);
+    }
+    else if(key.mode == "random"){
+        rndGenerator.seed(key.randomintervalSeed);
+        var rndSum = 0;
+        for (var i = 0; i < bitsAmount; i++) {
+            rndSum += rndGenerator.intBetween(+key.randomintervalMin, +key.randomintervalMax);
+        }
+        pixelsAmountNeed = bitsAmount + rndSum;
+    }
+
+    return pixelsAmount > pixelsAmountNeed; //if pixelsAmount > bitsAmount return true else return false
 }
 
 function stringToBin(message){

@@ -193,6 +193,7 @@
 
             $("#embed-form").on("submit", function (event) {
                 event.preventDefault();
+                $("#result-image-div").empty();
 
                 var imageFile = $("input[name='image-file']");
                 if(imageFile.val() == ""){
@@ -209,12 +210,6 @@
                 //get data from form inputs for AJAX request
                 var embedForm = $("#embed-form")[0];
                 var fd = new FormData(embedForm);
-                /*
-                fd.append("message", message);
-                fd.append("color-channel", $("input[name='color-channel']:checked").val());
-
-                fd.append("image-file", imageFile[0].files[0]);
-                */
 
                 $.ajax({
                     url: $(this).attr("action"),
@@ -244,10 +239,6 @@
                 //get data from form inputs for AJAX request
                 var extrForm = $("#extract-form")[0];
                 var fd = new FormData(extrForm);
-                /*
-                fd.append("image-file2", imageFile[0].files[0]);
-                fd.append("color-channel-extr", $("input[name='color-channel-extr']:checked").val());
-                */
 
                 $.ajax({
                     url: $(this).attr("action"),
