@@ -1,7 +1,7 @@
 var express = require("express");
 var events = require("events");
-var embeddingMethods = require("./embedding-methods");
-var extractingMethods = require("./extracting-methods");
+var embeddingMethods = require("./server/embedding-methods");
+var extractingMethods = require("./server/extracting-methods");
 
 var app = express();
 
@@ -16,13 +16,12 @@ var storage = multer.diskStorage({
 });
 var upload = multer({storage: storage});
 
-app.use(express.static(__dirname + "/css"));
-app.use(express.static(__dirname + "/libraries"));
+app.use(express.static(__dirname + "/client"));
 app.use(express.static(__dirname + "/result-images"));
 
 
 app.get("/", function (req, res) {
-   res.sendFile(__dirname + "/index.html")
+   res.sendFile(__dirname + "/client/index.html")
 });
 
 app.post("/path-emb", upload.single("image-file"), function (req, res, next) {
@@ -66,7 +65,7 @@ function createKey(req){
 
     key.colorChannel = req.body["color-channel"];
 
-    var intervalMode = req.body["interval-mode"]; //sequential|fixed|random
+    var intervalMode = req.body["interval-mode-select"]; //sequential|fixed|random
 
     if(intervalMode == "sequential"){
         key.mode = "sequential";

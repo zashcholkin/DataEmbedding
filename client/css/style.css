@@ -2,6 +2,10 @@ body, html {
     height: 100%;
 }
 
+body{
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;;
+}
+
 #emb-btn,
 #extr-btn{
     display: block;
@@ -62,6 +66,14 @@ textarea{
     width: 100%;
 }
 
+.header{
+    text-align: center;
+    font-size: 2rem;
+    margin: 20px 5% 20px 5%;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+
 /*Embedding page*/
 .step-body{
     margin-bottom: 10px;
@@ -69,11 +81,26 @@ textarea{
 
 .step-header{
     display: inline-block;
-    padding: 10px;
+    /*padding: 10px;*/
     background-color: gold;
     border: 1px solid #ccc;
     border-radius: 10px 0 0 10px;
 }
+
+.step-number{
+    display: inline-block;
+    background-color: #f0c800;
+    padding: 10px;
+    border-right: 1px solid #ccc;
+    border-radius: 10px 0 0 10px;
+}
+
+.step-text{
+    display: inline-block;
+}
+
+
+
 
 #image-before-embedding{
     width: 25%;
@@ -90,20 +117,35 @@ input[type='radio']{
 }
 
 .substep-body{
-    margin: 10px 0 0 5%;
+    margin: 0 0 10px 5%;
 }
 
 .substep-header{
     display: inline-block;
-    background-color: lemonchiffon;
-    padding: 5px;
+    background-color: whitesmoke;
     border: 1px solid #ccc;
-    border-radius: 5px 0 0 5px;
+    border-radius: 50px 0 0 50px;
+    padding: 5px;
 }
 
-.interval-mode{
+.substep-select{
+    display: inline-block;
+    border-right: 1px solid #ccc;
+    border-radius: 50px 0 0 50px;
+}
+
+.substep-select input[type='radio']{
+    margin: 5px 10px 5px 10px;
+}
+
+.substep-text{
+    display: inline-block;
+}
+
+.interval-mode-select{
     margin-left: 8%;
 }
+
 
 .substep-body input[type='number']{
     width: 3em;
@@ -112,4 +154,35 @@ input[type='radio']{
 #color-channel-div{
     background-color: darkred;
     color: white;
+}
+
+#go-start-page{
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    right: 0;
+    border: 1px solid #ccc;
+    background-color: ivory;
+    padding: 5px 10px 5px 5px;
+    border-radius: 5px 0 0 5px;
+    cursor: pointer;
+    text-align: center;
+}
+
+#go-start-page img{
+    width: 40px;
+    height: 40px;
+}
+
+#go-start-page:hover{
+    background-color: #e6e6e6;
+    border-color: #adadad;
+}
+
+:not(.interval-mode-select) + .interval-mode-select > .substep-header{
+    background-color: lemonchiffon;
+}
+
+.rvalue-input{
+    margin-right: 1rem;
 }
