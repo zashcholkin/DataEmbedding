@@ -16,12 +16,31 @@ var storage = multer.diskStorage({
 });
 var upload = multer({storage: storage});
 
-app.use(express.static(__dirname + "/client"));
-app.use(express.static(__dirname + "/result-images"));
+var exphbs = require("express-handlebars");
+app.engine(".hbs", exphbs(
+    {
+        defaultLayout: "main",
+        extname: ".hbs",
+        layoutsDir: __dirname + "/server/views/layouts"
+    }));
+app.set("view engine", ".hbs");
+app.set("views", __dirname + "/server/views");
+
+app.use("/public", express.static(__dirname + "/client"));
+app.use("/emb-result", express.static(__dirname + "/result-images"));
 
 
 app.get("/", function (req, res) {
    res.sendFile(__dirname + "/client/index.html")
+});
+
+app.post("/processing-page/:id", function (req, res) {
+   if(req.params.id == "emb"){
+       res.render("emb-extr-view", embExtrContext.embPage);
+   }
+   else{
+       res.render("emb-extr-view", embExtrContext.extrPage);
+   }
 });
 
 app.post("/path-emb", upload.single("image-file"), function (req, res, next) {
@@ -37,20 +56,24 @@ app.post("/path-emb", upload.single("image-file"), function (req, res, next) {
     });
 
     em.on("embedReady", function (resultImageName) {
-        res.send(`<a href='${resultImageName}' download="image.png">Result File</a>` );
+        res.send(
+            `<div class="result-content">
+                <a href='/emb-result/${resultImageName}' download="image.png">Result Image File</a>
+            </div>`
+        );
     });
 });
 
 
 app.post("/path-extr", upload.single("image-file2"), function (req, res, next) {
 
-    //var colorChannel = req.body["color-channel-extr"];
     var keyObj = createKey(req);
 
     var em = new events.EventEmitter();
     extractingMethods.LSBextr(req.file.originalname, keyObj, em);
     em.on("extrMessageReady", function (extractedMessage) {
-        res.send(`<div>${extractedMessage}</div>`);
+        res.send(`<div class="extracted-message-label">Extracted Message</div>
+                  <div class="result-content">${extractedMessage}</div>`);
     });
 
 });
@@ -65,7 +88,7 @@ function createKey(req){
 
     key.colorChannel = req.body["color-channel"];
 
-    var intervalMode = req.body["interval-mode-select"]; //sequential|fixed|random
+    var intervalMode = req.body["interval-mode"]; //sequential|fixed|random
 
     if(intervalMode == "sequential"){
         key.mode = "sequential";
@@ -82,4 +105,25 @@ function createKey(req){
     }
 
     return key;
+}
+
+
+var embExtrContext = {
+    embPage: {
+        header: "Embedding",
+        actionUrl: "/path-emb",
+        formId: "embed-form",
+        imageInputName: "image-file",
+        messageStep: true,
+        resultDivId: "embedding-result-div"
+    },
+
+    extrPage: {
+        header: "Extracting",
+        actionUrl: "/path-extr",
+        formId: "extract-form",
+        imageInputName: "image-file2",
+        messageStep: false,
+        resultDivId: "extracted-message-div"
+    }
 }

@@ -1,30 +1,12 @@
-$("#emb-btn").on("click", function () {
-    $("#emb-div").show();
-    $("#go-start-page").show();
-    $("#extr-div").hide();
-    $("#start-div").hide();
-    $("#image-before-embedding").hide();
-});
-
-$("#extr-btn").on("click", function () {
-    $("#extr-div").show();
-    $("#go-start-page").show();
-    $("#emb-div").hide();
-    $("#start-div").hide();
-});
-
 $("#go-start-page").on("click", function () {
-    $("#start-div").show();
-    $("#emb-div").hide();
-    $("#extr-div").hide();
-    $("#go-start-page").hide();
+    window.location = "/";
 });
 
-$("#emb-image-file").on("change", function () {
+$("#image-file-input").on("change", function () {
 
     var reader = new FileReader();
     reader.onload = function(e){
-        $("#image-before-embedding")
+        $("#emb-extr-img")
             .show()
             .attr("src", e.target.result);
     };

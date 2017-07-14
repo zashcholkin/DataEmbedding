@@ -1,0 +1,107 @@
+<div id="emb-div">
+    <div class="header">{{header}}</div>
+    <form method="post" action="{{actionUrl}}" id="{{formId}}" enctype="multipart/form-data">
+
+        <div class="step-body">
+            <div class="step-header">
+                <div class="step-number">Step 1.</div>
+                <div class="step-text">Select image file (png or bmp)</div>
+            </div>
+            <input type="file" id="image-file-input" name="{{imageInputName}}">
+        </div>
+
+        <img id="emb-extr-img">
+
+        <div class="step-body">
+            <div class="step-header">
+                <div class="step-number">Step 2.</div>
+                <div class="step-text">Select Key</div>
+            </div>
+        </div>
+
+        <div class="substep-body">
+            <div class="substep-header" id="color-channel-div">Color channel</div>
+            <label>Red<input type="radio" name="color-channel" value="r" checked>
+            </label>
+
+            <label>Green<input type="radio" name="color-channel" value="g">
+            </label>
+
+            <label>Blue<input type="radio" name="color-channel" value="b">
+            </label>
+        </div>
+
+        <div class="substep-body interval-mode-select">
+            <div class="substep-header">
+                <div class="substep-select">
+                    <input type="radio" name="interval-mode" value="sequential" checked>
+                </div>
+
+                <div class="substep-text">
+                    Sequential embedding (without gaps between pixels for embedding)
+                </div>
+            </div>
+        </div>
+
+        <div class="substep-body interval-mode-select">
+            <div class="substep-header">
+                <div class="substep-select">
+                    <input type="radio" name="interval-mode" value="fixed">
+                </div>
+
+                <div class="substep-text">
+                    Fixed pixel interval
+                </div>
+            </div>
+            <input type="number" name="finterval-amount" value="1" min="1" disabled>
+        </div>
+
+        <div class="substep-body interval-mode-select">
+            <div class="substep-header">
+                <div class="substep-select">
+                    <input type="radio" name="interval-mode" value="random">
+                </div>
+
+                <div class="substep-text">
+                    Random pixel interval
+                </div>
+            </div>
+            Min interval value <input type="number" class="rvalue-input" name="rinterval-min" value="0" min="0" disabled>
+
+            Max interval value <input type="number" class="rvalue-input" name="rinterval-max" value="1" min="0" disabled>
+
+            Random generator Seed <input type="number" class="rvalue-input" name="rinterval-seed" value="5" min="0" disabled>
+        </div>
+
+        {{#if messageStep}}
+        <div class="step-body">
+            <div class="step-header">
+                <div class="step-number">Step 3.</div>
+                <div class="step-text">Input message</div>
+            </div>
+            <input type="text" name="message">
+        </div>
+        {{/if}}
+
+        <div class="step-body">
+            <div class="step-header">
+                {{#if messageStep}}
+                    <div class="step-number">Step 4.</div>
+                    <div class=" step-text">Upload Image and Message</div>
+                {{else}}
+                    <div class="step-number">Step 3.</div>
+                    <div class=" step-text">Upload Image</div>
+                {{/if}}
+            </div>
+            <input type="submit" value="Upload">
+        </div>
+    </form>
+
+    <div id="{{resultDivId}}"></div>
+
+</div>
+
+<div id="go-start-page">
+    <img src="/public/icons/route.svg">
+    <div>Start Page</div>
+</div>

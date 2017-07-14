@@ -25,10 +25,13 @@ $("#embed-form").on("submit", function (event) {
         contentType: false,
         data: fd,
         success: function(data){
-            $("#result-image-div").html(data);
+            var embeddingResultDiv = $("#embedding-result-div");
+            embeddingResultDiv.html(data);
+            embeddingResultDiv[0].scrollIntoView();
         },
         error: function () {
-            $("#result-image-div").text("Error")
+            $("#embedding-result-div").text("Error");
+            window.scrollTo(0,document.body.scrollHeight);
         }
     });
 });
@@ -54,10 +57,13 @@ $("#extract-form").on("submit", function (event) {
         contentType: false,
         data: fd,
         success: function(data){
-            $("#extracted-message-div").html(data);
+            var extractedMessageDiv = $("#extracted-message-div");
+            extractedMessageDiv.html(data);
+            extractedMessageDiv[0].scrollIntoView();
         },
         error: function () {
-            $("#extracted-message-div").text("Error")
+            $("#extracted-message-div").text("Error");
+            window.scrollTo(0,document.body.scrollHeight);
         }
     });
 });

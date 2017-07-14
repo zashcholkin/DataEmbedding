@@ -3,7 +3,7 @@ body, html {
 }
 
 body{
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 #emb-btn,
@@ -30,10 +30,11 @@ body{
 
 #extr-btn{
     border-radius: 0 5px 5px 0;
+    border-left: none;
 }
 
 
-#start-div{
+#start-div, #start-form{
     display: flex;
     align-items: center;
     justify-content: center;
@@ -55,7 +56,7 @@ body{
 #emb-div,
 #extr-div
 {
-    display: none;
+    /*display: none;*/
 }
 
 .image-div{
@@ -97,12 +98,13 @@ textarea{
 
 .step-text{
     display: inline-block;
+    padding: 5px 5px 5px 0;
 }
 
 
 
-
-#image-before-embedding{
+#emb-extr-img{
+    display: none;
     width: 25%;
     height: 25%;
     border: 1px solid #ddd;
@@ -157,7 +159,6 @@ input[type='radio']{
 }
 
 #go-start-page{
-    display: none;
     position: fixed;
     bottom: 20px;
     right: 0;
@@ -185,4 +186,21 @@ input[type='radio']{
 
 .rvalue-input{
     margin-right: 1rem;
+}
+
+
+.result-content{
+    display: inline-block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding: 10px 20px 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    max-width: 96%;
+    word-wrap: break-word;
+}
+
+.extracted-message-label{
+    margin-top: 20px;
+    margin-left: 15px;
 }

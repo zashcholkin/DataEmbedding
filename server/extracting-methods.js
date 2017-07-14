@@ -4,7 +4,7 @@ const BITS_PER_CHAR = require("./config").config.BITS_PER_CHAR;
 const BITS_FOR_MESSAGE_LENGTH = require("./config").config.BITS_FOR_MESSAGE_LENGTH;
 
 function LSBextr(imageFilename, key, em) {
-    var sourcePath = __dirname + "/uploads/" + imageFilename;
+    var sourcePath = __dirname + "/../uploads/" + imageFilename;
 
     var messageBinArr = [];
 
