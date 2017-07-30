@@ -1,3 +1,5 @@
+var $ = require("jquery");
+
 $("#embed-form").on("submit", function (event) {
     event.preventDefault();
     $("#result-image-div").empty();

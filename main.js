@@ -31,7 +31,7 @@ app.use("/emb-result", express.static(__dirname + "/result-images"));
 
 
 app.get("/", function (req, res) {
-   res.sendFile(__dirname + "/client/index.html")
+   res.sendFile(__dirname + "/client/index.html");
 });
 
 app.post("/processing-page/:id", function (req, res) {

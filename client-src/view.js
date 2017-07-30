@@ -1,3 +1,7 @@
+var $ = require("jquery");
+require("./css/start-page.css");
+require("./css/emb-extr-pages.css");
+
 $("#go-start-page").on("click", function () {
     window.location = "/";
 });
