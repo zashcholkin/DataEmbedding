@@ -1,24 +1,25 @@
-var $ = require("jquery");
+const $ = require("jquery");
 
 $("#embed-form").on("submit", function (event) {
     event.preventDefault();
     $("#result-image-div").empty();
 
-    var imageFile = $("input[name='image-file']");
-    if(imageFile.val() == ""){
+    //checking presence of data before sending to the server
+    const imageFile = $("input[name='image-file']");
+    if(imageFile.val() === ""){
         alert("Image file wasn't selected");
         return false;
     }
 
-    var message = $("input[name='message']").val();
-    if(message == ""){
+    const message = $("input[name='message']").val();
+    if(message === ""){
         alert("Message is absent");
         return false;
     }
 
     //get data from form inputs for AJAX request
-    var embedForm = $("#embed-form")[0];
-    var fd = new FormData(embedForm);
+    const embedForm = $("#embed-form")[0];
+    const fd = new FormData(embedForm);
 
     $.ajax({
         url: $(this).attr("action"),
@@ -27,7 +28,7 @@ $("#embed-form").on("submit", function (event) {
         contentType: false,
         data: fd,
         success: function(data){
-            var embeddingResultDiv = $("#embedding-result-div");
+            const embeddingResultDiv = $("#embedding-result-div");
             embeddingResultDiv.html(data);
             embeddingResultDiv[0].scrollIntoView();
         },
@@ -42,15 +43,16 @@ $("#embed-form").on("submit", function (event) {
 $("#extract-form").on("submit", function (event) {
     event.preventDefault();
 
-    var imageFile = $("input[name='image-file2']");
-    if(imageFile.val() == ""){
+    //checking presence of image before sending to the server
+    const imageFile = $("input[name='image-file2']");
+    if(imageFile.val() === ""){
         alert("Image file wasn't selected");
         return false;
     }
 
     //get data from form inputs for AJAX request
-    var extrForm = $("#extract-form")[0];
-    var fd = new FormData(extrForm);
+    const extrForm = $("#extract-form")[0];
+    const fd = new FormData(extrForm);
 
     $.ajax({
         url: $(this).attr("action"),
@@ -59,7 +61,7 @@ $("#extract-form").on("submit", function (event) {
         contentType: false,
         data: fd,
         success: function(data){
-            var extractedMessageDiv = $("#extracted-message-div");
+            const extractedMessageDiv = $("#extracted-message-div");
             extractedMessageDiv.html(data);
             extractedMessageDiv[0].scrollIntoView();
         },

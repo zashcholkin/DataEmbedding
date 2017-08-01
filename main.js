@@ -1,12 +1,13 @@
-var express = require("express");
-var events = require("events");
-var embeddingMethods = require("./server/embedding-methods");
-var extractingMethods = require("./server/extracting-methods");
+const express = require("express");
+const events = require("events");
+const embeddingMethods = require("./server/embedding-methods");
+const extractingMethods = require("./server/extracting-methods");
 
-var app = express();
+const app = express();
+const port = 3000;
 
-var multer = require("multer");
-var storage = multer.diskStorage({
+const multer = require("multer");
+const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, "uploads/")
     },
@@ -14,9 +15,9 @@ var storage = multer.diskStorage({
         cb(null, file.originalname);
     }
 });
-var upload = multer({storage: storage});
+const upload = multer({storage: storage});
 
-var exphbs = require("express-handlebars");
+const exphbs = require("express-handlebars");
 app.engine(".hbs", exphbs(
     {
         defaultLayout: "main",
@@ -35,7 +36,7 @@ app.get("/", function (req, res) {
 });
 
 app.post("/processing-page/:id", function (req, res) {
-   if(req.params.id == "emb"){
+   if(req.params.id === "emb"){
        res.render("emb-extr-view", embExtrContext.embPage);
    }
    else{
@@ -45,10 +46,10 @@ app.post("/processing-page/:id", function (req, res) {
 
 app.post("/path-emb", upload.single("image-file"), function (req, res, next) {
 
-    var message = req.body["message"];
-    var keyObj = createKey(req);
+    const message = req.body["message"];
+    const keyObj = createKey(req);
 
-    var em = new events.EventEmitter();
+    const em = new events.EventEmitter();
     embeddingMethods.LSBemb(req.file.originalname, message, keyObj, em);
 
     em.on("imageTooSmall", function(){
@@ -67,9 +68,9 @@ app.post("/path-emb", upload.single("image-file"), function (req, res, next) {
 
 app.post("/path-extr", upload.single("image-file2"), function (req, res, next) {
 
-    var keyObj = createKey(req);
+    const keyObj = createKey(req);
 
-    var em = new events.EventEmitter();
+    const em = new events.EventEmitter();
     extractingMethods.LSBextr(req.file.originalname, keyObj, em);
     em.on("extrMessageReady", function (extractedMessage) {
         res.send(`<div class="extracted-message-label">Extracted Message</div>
@@ -79,16 +80,16 @@ app.post("/path-extr", upload.single("image-file2"), function (req, res, next) {
 });
 
 
-app.listen(3000, function () {
+app.listen(port, function () {
    console.log("app listen");
 });
 
 function createKey(req){
-    var key = {};
+    const key = {};
 
     key.colorChannel = req.body["color-channel"];
 
-    var intervalMode = req.body["interval-mode"]; //sequential|fixed|random
+    const intervalMode = req.body["interval-mode"]; //sequential|fixed|random
 
     if(intervalMode == "sequential"){
         key.mode = "sequential";
@@ -108,7 +109,7 @@ function createKey(req){
 }
 
 
-var embExtrContext = {
+const embExtrContext = {
     embPage: {
         header: "Embedding",
         actionUrl: "/path-emb",
@@ -126,4 +127,4 @@ var embExtrContext = {
         messageStep: false,
         resultDivId: "extracted-message-div"
     }
-}
+};

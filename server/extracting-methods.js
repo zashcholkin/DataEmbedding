@@ -1,18 +1,18 @@
-var jimp = require("jimp");
-var rndGenerator = require("random-seed").create();
+const jimp = require("jimp");
+const rndGenerator = require("random-seed").create();
 const BITS_PER_CHAR = require("./config").config.BITS_PER_CHAR;
 const BITS_FOR_MESSAGE_LENGTH = require("./config").config.BITS_FOR_MESSAGE_LENGTH;
 
 function LSBextr(imageFilename, key, em) {
-    var sourcePath = __dirname + "/../uploads/" + imageFilename;
+    const sourcePath = __dirname + "/../uploads/" + imageFilename;
 
-    var messageBinArr = [];
+    const messageBinArr = [];
 
     jimp.read(sourcePath, function (err, image) {
         if (err) throw err;
 
-        var binMessageLengthArr = [];
-        var messageLengthReady = false;
+        const binMessageLengthArr = [];
+        let messageLengthReady = false;
 
         if(key.mode == "sequential") {
             outer:
@@ -40,7 +40,7 @@ function LSBextr(imageFilename, key, em) {
                     }
         }
         else if(key.mode == "fixed"){
-            var count = key.fixedIntervalAmount;
+            let count = key.fixedIntervalAmount;
 
             outer:
                 for (var i = 0; i < image.bitmap.width; i++)
@@ -75,7 +75,7 @@ function LSBextr(imageFilename, key, em) {
         }
         else if(key.mode == "random"){
             rndGenerator.seed(key.randomintervalSeed);
-            var count = rndGenerator.intBetween(+key.randomintervalMin, +key.randomintervalMax);
+            let count = rndGenerator.intBetween(+key.randomintervalMin, +key.randomintervalMax);
 
             outer:
                 for (var i = 0; i < image.bitmap.width; i++)
@@ -108,8 +108,9 @@ function LSBextr(imageFilename, key, em) {
                         }
                     }
         }
-        var binCharArr = [];
-        var resultTextArr = [];
+
+        let binCharArr = [];
+        const resultTextArr = [];
 
         while(messageBinArr.length > 0){
             binCharArr = messageBinArr.splice(0, BITS_PER_CHAR);
@@ -120,9 +121,9 @@ function LSBextr(imageFilename, key, em) {
 
         em.emit("extrMessageReady", resultTextArr.join(""));
     });
-};
+}
 
-var extractingMethods = {
+const extractingMethods = {
     LSBextr: LSBextr
 };
 

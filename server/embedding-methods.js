@@ -1,10 +1,10 @@
-var jimp = require("jimp");
-var rndGenerator = require("random-seed").create();
+const jimp = require("jimp");
+const rndGenerator = require("random-seed").create();
 const BITS_PER_CHAR = require("./config").config.BITS_PER_CHAR;
 const BITS_FOR_MESSAGE_LENGTH = require("./config").config.BITS_FOR_MESSAGE_LENGTH;
 
 function LSBemb(imageFilename, message, key, em) {
-    var sourcePath = __dirname + "/../uploads/" + imageFilename;
+    const sourcePath = __dirname + "/../uploads/" + imageFilename;
 
     jimp.read(sourcePath, function (err, image) {
         if (err) throw err;
@@ -14,11 +14,11 @@ function LSBemb(imageFilename, message, key, em) {
             return;
         }
 
-        var messageBinArr = stringToBin(message); //(length in bin format + message) -> bin format
-        var amountOfBitsInMessage = messageBinArr.length;
+        const messageBinArr = stringToBin(message); //(length in bin format + message) -> bin format
+        const amountOfBitsInMessage = messageBinArr.length;
 
-        var n = 0;
-        var colorObj = {};
+        let n = 0;
+        const colorObj = {};
 
         if(key.mode == "sequential") {
             outer:
@@ -46,7 +46,7 @@ function LSBemb(imageFilename, message, key, em) {
                 }
         }
         else if(key.mode == "fixed"){
-            var count = key.fixedIntervalAmount;
+            let count = key.fixedIntervalAmount;
 
             outerFixed:
             for (var i = 0; i < image.bitmap.width; i++)
@@ -82,7 +82,7 @@ function LSBemb(imageFilename, message, key, em) {
         else if(key.mode == "random"){
             rndGenerator.seed(key.randomintervalSeed);
 
-            var count = rndGenerator.intBetween(+key.randomintervalMin, +key.randomintervalMax);
+            let count = rndGenerator.intBetween(+key.randomintervalMin, +key.randomintervalMax);
 
             outerRandom:
             for (var i = 0; i < image.bitmap.width; i++)
@@ -122,7 +122,8 @@ function LSBemb(imageFilename, message, key, em) {
         });
     });
 }
-var embeddingMethods = {
+
+const embeddingMethods = {
     LSBemb: LSBemb
 };
 
@@ -131,9 +132,9 @@ module.exports = embeddingMethods;
 
 function sizeEstimate(image, message, key){
 
-    var bitsAmount = message.length * BITS_PER_CHAR + BITS_FOR_MESSAGE_LENGTH;
-    var pixelsAmount = image.bitmap.width * image.bitmap.height;
-    var pixelsAmountNeed = 0;
+    const bitsAmount = message.length * BITS_PER_CHAR + BITS_FOR_MESSAGE_LENGTH;
+    const pixelsAmount = image.bitmap.width * image.bitmap.height;
+    let pixelsAmountNeed = 0;
 
     if(key.mode == "sequential"){
         pixelsAmountNeed = bitsAmount;
@@ -154,12 +155,12 @@ function sizeEstimate(image, message, key){
 }
 
 function stringToBin(message){
-    var resultBinArr = [];
+    let resultBinArr = [];
 
-    var messageLength = message.length * BITS_PER_CHAR;
-    var binMessageLength = messageLength.toString(2);
-    var binMessageLengthArr = binMessageLength.split("");
-    var diffLength = BITS_FOR_MESSAGE_LENGTH - binMessageLengthArr.length;
+    const messageLength = message.length * BITS_PER_CHAR;
+    const binMessageLength = messageLength.toString(2);
+    let binMessageLengthArr = binMessageLength.split("");
+    const diffLength = BITS_FOR_MESSAGE_LENGTH - binMessageLengthArr.length;
     if(diffLength > 0){
         binMessageLengthArr = (Array(diffLength).fill(0)).concat(binMessageLengthArr); //[1010] -> [0000..00 1010]
     }

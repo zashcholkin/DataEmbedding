@@ -1,14 +1,14 @@
 {
   "name": "data-embedding",
   "version": "1.0.0",
-  "description": "Web app for embedding data in image",
+  "description": "Web app for embedding data into image",
   "main": "main.js",
   "scripts": {
     "start": "node main.js",
     "build": "./node_modules/.bin/webpack --config webpack.prod.config.js"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "events": "^1.1.1",
     "express": "^4.15.2",
