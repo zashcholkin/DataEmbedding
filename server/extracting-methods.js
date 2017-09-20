@@ -11,6 +11,8 @@ function LSBextr(imageFilename, key, em) {
     jimp.read(sourcePath, function (err, image) {
         if (err) throw err;
 
+        const pixelsAmount = image.bitmap.width * image.bitmap.height;
+
         const binMessageLengthArr = [];
         let messageLengthReady = false;
 
@@ -28,6 +30,12 @@ function LSBextr(imageFilename, key, em) {
                             if (binMessageLengthArr.length == BITS_FOR_MESSAGE_LENGTH) {
                                 var binLength = binMessageLengthArr.join("");
                                 var messageLength = parseInt(binLength, 2);
+
+                                if(messageLength > pixelsAmount){
+                                    em.emit("incorrectMessageLength");
+                                    return;
+                                }
+
                                 messageLengthReady = true;
                             }
                         }
@@ -38,6 +46,7 @@ function LSBextr(imageFilename, key, em) {
                             }
                         }
                     }
+
         }
         else if(key.mode == "fixed"){
             let count = key.fixedIntervalAmount;
@@ -61,6 +70,12 @@ function LSBextr(imageFilename, key, em) {
                                 if (binMessageLengthArr.length == BITS_FOR_MESSAGE_LENGTH) {
                                     var binLength = binMessageLengthArr.join("");
                                     var messageLength = parseInt(binLength, 2);
+
+                                    if(messageLength > pixelsAmount){
+                                        em.emit("incorrectMessageLength");
+                                        return;
+                                    }
+
                                     messageLengthReady = true;
                                 }
                             }
@@ -96,6 +111,12 @@ function LSBextr(imageFilename, key, em) {
                                 if (binMessageLengthArr.length == BITS_FOR_MESSAGE_LENGTH) {
                                     var binLength = binMessageLengthArr.join("");
                                     var messageLength = parseInt(binLength, 2);
+
+                                    if(messageLength > pixelsAmount){
+                                        em.emit("incorrectMessageLength");
+                                        return;
+                                    }
+
                                     messageLengthReady = true;
                                 }
                             }

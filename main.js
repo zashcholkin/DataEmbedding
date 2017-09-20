@@ -71,7 +71,11 @@ app.post("/path-extr", upload.single("image-file2"), function (req, res, next) {
     const keyObj = createKey(req);
 
     const em = new events.EventEmitter();
+
     extractingMethods.LSBextr(req.file.originalname, keyObj, em);
+    em.on("incorrectMessageLength", function(){
+        res.send(`<div class="extracted-message-label">Bad Message Length</div>`);
+    });
     em.on("extrMessageReady", function (extractedMessage) {
         res.send(`<div class="extracted-message-label">Extracted Message</div>
                   <div class="result-content">${extractedMessage}</div>`);
