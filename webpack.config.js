@@ -4,12 +4,14 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = {
     entry: {
-        "bundle": ["./client-src/view", "./client-src/ajax-submit"]
+        "bundle": ["./client-src/view", "./client-src/ajax-submit", "./client-src/ws-progress"]
     },
 
     output: {
         filename: "./client/[name].js"
     },
+
+    watch: true,
 
     module: {
         rules: [

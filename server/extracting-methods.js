@@ -3,10 +3,12 @@ const rndGenerator = require("random-seed").create();
 const BITS_PER_CHAR = require("./config").config.BITS_PER_CHAR;
 const BITS_FOR_MESSAGE_LENGTH = require("./config").config.BITS_FOR_MESSAGE_LENGTH;
 
-function LSBextr(imageFilename, key, em) {
+function LSBextr(imageFilename, key, em, wsHandler) {
     const sourcePath = __dirname + "/../uploads/" + imageFilename;
 
     const messageBinArr = [];
+
+    var progressValue = 0;
 
     jimp.read(sourcePath, function (err, image) {
         if (err) throw err;
@@ -17,6 +19,7 @@ function LSBextr(imageFilename, key, em) {
         let messageLengthReady = false;
 
         if(key.mode == "sequential") {
+            let n = 0;
             outer:
                 for (var i = 0; i < image.bitmap.width; i++)
                     for (var j = 0; j < image.bitmap.height; j++) {
@@ -41,6 +44,18 @@ function LSBextr(imageFilename, key, em) {
                         }
                         else {
                             messageBinArr.push(lowBit);
+
+                            n++;
+
+                            var newProgressValue = Math.round(n / messageLength * 100);
+                            if (wsHandler != null) {
+                                if (newProgressValue > progressValue) {
+                                    progressValue = newProgressValue;
+                                    wsHandler.send(progressValue);
+                                }
+                            }
+
+
                             if (messageBinArr.length == messageLength) {
                                 break outer;
                             }
@@ -49,6 +64,7 @@ function LSBextr(imageFilename, key, em) {
 
         }
         else if(key.mode == "fixed"){
+            let n=0;
             let count = key.fixedIntervalAmount;
 
             outer:
@@ -81,6 +97,17 @@ function LSBextr(imageFilename, key, em) {
                             }
                             else {
                                 messageBinArr.push(lowBit);
+
+                                n++;
+
+                                var newProgressValue = Math.round(n / messageLength * 100);
+                                if (wsHandler != null) {
+                                    if (newProgressValue > progressValue) {
+                                        progressValue = newProgressValue;
+                                        wsHandler.send(progressValue);
+                                    }
+                                }
+
                                 if (messageBinArr.length == messageLength) {
                                     break outer;
                                 }
@@ -89,6 +116,7 @@ function LSBextr(imageFilename, key, em) {
                     }
         }
         else if(key.mode == "random"){
+            let n = 0;
             rndGenerator.seed(key.randomintervalSeed);
             let count = rndGenerator.intBetween(+key.randomintervalMin, +key.randomintervalMax);
 
@@ -112,6 +140,8 @@ function LSBextr(imageFilename, key, em) {
                                     var binLength = binMessageLengthArr.join("");
                                     var messageLength = parseInt(binLength, 2);
 
+                                    console.log(`messageLength=${messageLength}; pixelsAmount=${pixelsAmount}`);
+
                                     if(messageLength > pixelsAmount){
                                         em.emit("incorrectMessageLength");
                                         return;
@@ -122,6 +152,18 @@ function LSBextr(imageFilename, key, em) {
                             }
                             else {
                                 messageBinArr.push(lowBit);
+
+                                 n++;
+
+                                var newProgressValue = Math.round(n / messageLength * 100);
+                                if (wsHandler != null) {
+                                     if (newProgressValue > progressValue) {
+                                         progressValue = newProgressValue;
+                                         wsHandler.send(progressValue);
+                                     }
+                                }
+
+
                                 if (messageBinArr.length == messageLength) {
                                     break outer;
                                 }

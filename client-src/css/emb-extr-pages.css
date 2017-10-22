@@ -126,3 +126,9 @@ input[type='radio']{
     margin-top: 20px;
     margin-left: 15px;
 }
+
+#extract-progress-bar{
+    height: 10px;
+    width: 0;
+    background-color: darkblue;
+}

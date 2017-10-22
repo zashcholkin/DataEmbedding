@@ -1,4 +1,4 @@
-<div id="emb-div">
+<div>
     <div class="header">{{header}}</div>
     <form method="post" action="{{actionUrl}}" id="{{formId}}" enctype="multipart/form-data">
 
@@ -96,6 +96,10 @@
             <input type="submit" value="Upload">
         </div>
     </form>
+
+    {{#if isExtractStage}}
+        <div id="extract-progress-bar"></div>
+    {{/if}}
 
     <div id="{{resultDivId}}"></div>
 
