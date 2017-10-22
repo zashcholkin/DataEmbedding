@@ -13,7 +13,7 @@ function LSBextr(imageFilename, key, em, wsHandler) {
     jimp.read(sourcePath, function (err, image) {
         if (err) throw err;
 
-        const pixelsAmount = image.bitmap.width * image.bitmap.height;
+        const activePixelsAmount = image.bitmap.width * image.bitmap.height - BITS_FOR_MESSAGE_LENGTH;
 
         const binMessageLengthArr = [];
         let messageLengthReady = false;
@@ -34,7 +34,7 @@ function LSBextr(imageFilename, key, em, wsHandler) {
                                 var binLength = binMessageLengthArr.join("");
                                 var messageLength = parseInt(binLength, 2);
 
-                                if(messageLength > pixelsAmount){
+                                if(messageLength > activePixelsAmount){
                                     em.emit("incorrectMessageLength");
                                     return;
                                 }
@@ -87,7 +87,7 @@ function LSBextr(imageFilename, key, em, wsHandler) {
                                     var binLength = binMessageLengthArr.join("");
                                     var messageLength = parseInt(binLength, 2);
 
-                                    if(messageLength > pixelsAmount){
+                                    if(messageLength > activePixelsAmount){
                                         em.emit("incorrectMessageLength");
                                         return;
                                     }
@@ -120,6 +120,8 @@ function LSBextr(imageFilename, key, em, wsHandler) {
             rndGenerator.seed(key.randomintervalSeed);
             let count = rndGenerator.intBetween(+key.randomintervalMin, +key.randomintervalMax);
 
+            let pixelsAmountRndMode = getActivePixelsAmount(key, image.bitmap.width, image.bitmap.height) -  BITS_FOR_MESSAGE_LENGTH;
+
             outer:
                 for (var i = 0; i < image.bitmap.width; i++)
                     for (var j = 0; j < image.bitmap.height; j++) {
@@ -140,9 +142,7 @@ function LSBextr(imageFilename, key, em, wsHandler) {
                                     var binLength = binMessageLengthArr.join("");
                                     var messageLength = parseInt(binLength, 2);
 
-                                    console.log(`messageLength=${messageLength}; pixelsAmount=${pixelsAmount}`);
-
-                                    if(messageLength > pixelsAmount){
+                                    if(messageLength > pixelsAmountRndMode){
                                         em.emit("incorrectMessageLength");
                                         return;
                                     }
@@ -191,3 +191,18 @@ const extractingMethods = {
 };
 
 module.exports = extractingMethods;
+
+
+function getActivePixelsAmount(key, width, height) {
+
+    rndGenerator.seed(key.randomintervalSeed);
+    const totalAmount = width * height;
+    let index = 0;
+    let amount = 0;
+
+    while(index <= totalAmount){
+        index = index + 1 + rndGenerator.intBetween(+key.randomintervalMin, +key.randomintervalMax);
+        amount ++;
+    }
+    return amount;
+}
