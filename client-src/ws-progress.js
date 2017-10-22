@@ -1,5 +1,6 @@
 const $ = require("jquery");
 
+const webSocketPort = 3001;
 
 $(document).ready(function(){
    if($("body").attr("class") === "emb-extr-body"){
@@ -7,7 +8,7 @@ $(document).ready(function(){
        const extractingProgressBar = $("#extract-progress-bar");
        extractingProgressBar.css("width", 0);
 
-       var socket = new WebSocket("ws://localhost:3001");
+       var socket = new WebSocket("ws://localhost:" + webSocketPort);
 
        socket.onopen = function(){ //connect was created
            socket.send(" From client: start connection");

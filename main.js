@@ -6,9 +6,10 @@ const webSocketServer = require("ws");
 
 const app = express();
 const port = 3000;
+const webSocketPort = 3001;
 
-const wss = new webSocketServer.Server({port:3001});
-var wsHandler = null;
+const wss = new webSocketServer.Server({port: webSocketPort});
+let wsHandler = null;
 wss.on("connection", function (ws) {
     console.log("connection");
     wsHandler = ws;
@@ -17,22 +18,6 @@ wss.on("close", function () {
     console.log("close");
     wsHandler = null;
 });
-
-// const wss = new webSocketServer.Server({port:3001});
-// var wsConnectPromise = new Promise(function(resolve, reject){
-//     wss.on("connection", function (ws) {
-//         ws.on("message", function (message) {
-//             console.log("received:" + message);
-//         });
-//         ws.on("close", function () {
-//             console.log("Client disconnected");
-//         });
-//         console.log("connected");
-//         valueRND = Math.random();
-//         console.log("valueRND before resolve = " + valueRND);
-//         resolve(valueRND);
-//     });
-// });
 
 const multer = require("multer");
 const storage = multer.diskStorage({

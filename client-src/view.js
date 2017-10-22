@@ -2,6 +2,9 @@ const $ = require("jquery");
 require("./css/start-page.css");
 require("./css/emb-extr-pages.css");
 
+const extractingProgressBar = $("#extract-progress-bar");
+const extractedMessageDiv = $("#extracted-message-div");
+
 $("#go-start-page").on("click", function () {
     window.location = "/";
 });
@@ -16,6 +19,9 @@ $("#image-file-input").on("change", function () {
     };
 
     reader.readAsDataURL(this.files[0]);
+
+    extractingProgressBar.css("width", 0);
+    extractedMessageDiv.html("");
 });
 
 
@@ -46,4 +52,10 @@ $("input[name='interval-mode']").on("change", function () {
         $("input[name='rinterval-max']").prop("disabled", false);
         $("input[name='rinterval-seed']").prop("disabled", false);
     }
+});
+
+$("#extract-form input[type='submit']").on("click", function () {
+
+    extractingProgressBar.css("width", 0);
+    extractedMessageDiv.html("");
 });
