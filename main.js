@@ -58,7 +58,6 @@ app.post("/processing-page/:id", function (req, res) {
 });
 
 app.post("/path-emb", upload.single("image-file"), function (req, res, next) {
-
     const message = req.body["message"];
     const keyObj = createKey(req);
 
@@ -133,7 +132,8 @@ const embExtrContext = {
         formId: "embed-form",
         imageInputName: "image-file",
         messageStep: true,
-        resultDivId: "embedding-result-div"
+        resultDivId: "embedding-result-div",
+        isEmbedStage: true
     },
 
     extrPage: {

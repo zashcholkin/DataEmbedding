@@ -21,13 +21,20 @@ $("#embed-form").on("submit", function (event) {
     const embedForm = $("#embed-form")[0];
     const fd = new FormData(embedForm);
 
+    const loaderDiv = $(".loader");
+
     $.ajax({
         url: $(this).attr("action"),
         type: "post",
         processData: false,
         contentType: false,
         data: fd,
+        beforeSend: function(){
+            loaderDiv.show();
+            loaderDiv[0].scrollIntoView();
+        },
         success: function(data){
+            loaderDiv.hide();
             const embeddingResultDiv = $("#embedding-result-div");
             embeddingResultDiv.html(data);
             embeddingResultDiv[0].scrollIntoView();
