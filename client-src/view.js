@@ -1,4 +1,3 @@
-const $ = require("jquery");
 require("./css/start-page.css");
 require("./css/emb-extr-pages.css");
 

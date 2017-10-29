@@ -1,5 +1,3 @@
-const $ = require("jquery");
-
 const webSocketPort = 3001;
 
 $(document).ready(function(){

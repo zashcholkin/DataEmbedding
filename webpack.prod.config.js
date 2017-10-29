@@ -36,6 +36,9 @@ module.exports = {
             {from: "./client-src/icons", to: "./client/icons"}
         ]),
         new ExtractTextPlugin("./client/bundle.css"),
+        new webpack.ProvidePlugin({ //include jquery for all modules
+            $: "jquery"
+        }),
         new webpack.optimize.UglifyJsPlugin()
     ]
 };

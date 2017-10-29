@@ -30,7 +30,9 @@ module.exports = {
             {from: "./client-src/index.html", to: "./client/index.html"},
             {from: "./client-src/icons", to: "./client/icons"}
         ]),
-        new ExtractTextPlugin("./client/bundle.css")
+        new ExtractTextPlugin("./client/bundle.css"),
+        new webpack.ProvidePlugin({ //include jquery for all modules
+            $: "jquery"
+        })
     ]
-
 };
