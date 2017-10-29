@@ -4,6 +4,7 @@ require("./css/emb-extr-pages.css");
 
 const extractingProgressBar = $("#extract-progress-bar");
 const extractedMessageDiv = $("#extracted-message-div");
+const embeddingResultDiv = $("#embedding-result-div");
 
 $("#go-start-page").on("click", function () {
     window.location = "/";
@@ -22,6 +23,7 @@ $("#image-file-input").on("change", function () {
 
     extractingProgressBar.css("width", 0);
     extractedMessageDiv.html("");
+    embeddingResultDiv.html("");
 });
 
 
@@ -55,7 +57,10 @@ $("input[name='interval-mode']").on("change", function () {
 });
 
 $("#extract-form input[type='submit']").on("click", function () {
-
     extractingProgressBar.css("width", 0);
     extractedMessageDiv.html("");
+});
+
+$("#embed-form input[type='submit']").on("click", function () {
+    embeddingResultDiv.html("");
 });
