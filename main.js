@@ -25,7 +25,11 @@ const storage = multer.diskStorage({
         cb(null, "uploads/")
     },
     filename: function (req, file, cb) {
-        cb(null, file.originalname);
+
+        const filePattern = /(\.png|\.bmp)$/;
+        const receivedFileName = file.originalname.replace(filePattern, `-${Date.now()}$1`);
+
+        cb(null, receivedFileName);
     }
 });
 const upload = multer({storage: storage});
@@ -62,7 +66,7 @@ app.post("/path-emb", upload.single("image-file"), function (req, res, next) {
     const keyObj = createKey(req);
 
     const em = new events.EventEmitter();
-    embeddingMethods.LSBemb(req.file.originalname, message, keyObj, em);
+    embeddingMethods.LSBemb(req.file.filename, message, keyObj, em);
 
     em.on("imageTooSmall", function(){
         res.send("Image is too small for this message and key parameters");
@@ -84,7 +88,7 @@ app.post("/path-extr", upload.single("image-file2"), function (req, res, next) {
 
     const em = new events.EventEmitter();
 
-    extractingMethods.LSBextr(req.file.originalname, keyObj, em, wsHandler);
+    extractingMethods.LSBextr(req.file.filename, keyObj, em, wsHandler);
     em.on("incorrectMessageLength", function(){
         res.send(`<div class="extracted-message-label">Bad Message Length</div>`);
     });
