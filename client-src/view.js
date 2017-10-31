@@ -9,11 +9,22 @@ $("#go-start-page").on("click", function () {
     window.location = "/";
 });
 
-$("#image-file-input").on("change", function () {
+$("#image-file-input").on("change", function (ev) {
+
+    const embExtrImage = $("#emb-extr-img");
+
+    const mimeType = ev.target.files[0].type;
+    const formatPattern = /^image\/(png|bmp)/;
+    if (!formatPattern.test(mimeType)) {
+        alert("Incorrect image format. You have to use png or bmp format");
+        $(this).val("");
+        embExtrImage.hide();
+        return false;
+    }
 
     const reader = new FileReader();
-    reader.onload = function(e){
-        $("#emb-extr-img")
+    reader.onload = function (e) {
+        embExtrImage
             .show()
             .attr("src", e.target.result);
     };
@@ -28,7 +39,7 @@ $("#image-file-input").on("change", function () {
 
 const colorChannelDiv = $("#color-channel-div");
 $("input[name='color-channel']").on("change", function () {
-    switch ($("input[name='color-channel']:checked").val()){
+    switch ($("input[name='color-channel']:checked").val()) {
         case "r":
             colorChannelDiv.css("background-color", "darkred");
             break;
@@ -46,9 +57,9 @@ $("input[name='interval-mode']").on("change", function () {
     $(".interval-mode-select input[type='number']").prop("disabled", true);
 
     $(this).parents(".substep-header").css("background-color", "lemonchiffon");
-    if($(this).val() === "fixed"){
+    if ($(this).val() === "fixed") {
         $("input[name='finterval-amount']").prop("disabled", false);
-    } else if($(this).val() === "random"){
+    } else if ($(this).val() === "random") {
         $("input[name='rinterval-min']").prop("disabled", false);
         $("input[name='rinterval-max']").prop("disabled", false);
         $("input[name='rinterval-seed']").prop("disabled", false);
