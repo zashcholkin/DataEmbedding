@@ -9,7 +9,7 @@ function LSBemb(imageFilename, message, key, em) {
     jimp.read(sourcePath, function (err, image) {
         if (err) throw err;
 
-        if(sizeEstimate(image, message, key) == false){
+        if(sizeEstimate(image, message, key) === false){
             em.emit("imageTooSmall");
             return;
         }
@@ -20,12 +20,12 @@ function LSBemb(imageFilename, message, key, em) {
         let n = 0;
         const colorObj = {};
 
-        if(key.mode == "sequential") {
+        if(key.mode === "sequential") {
             outer:
             for (var i = 0; i < image.bitmap.width; i++)
                 for (var j = 0; j < image.bitmap.height; j++) {
 
-                if(amountOfBitsInMessage == n){
+                if(amountOfBitsInMessage === n){
                     break outer;
                 }
 
@@ -45,18 +45,18 @@ function LSBemb(imageFilename, message, key, em) {
                     n++;
                 }
         }
-        else if(key.mode == "fixed"){
+        else if(key.mode === "fixed"){
             let count = key.fixedIntervalAmount;
 
             outerFixed:
             for (var i = 0; i < image.bitmap.width; i++)
                 for (var j = 0; j < image.bitmap.height; j++) {
 
-                    if(amountOfBitsInMessage == n){
+                    if(amountOfBitsInMessage === n){
                         break outerFixed;
                     }
 
-                    if (count != 0) {
+                    if (count !== 0) {
                         count--;
                     }
                     else {
@@ -79,7 +79,7 @@ function LSBemb(imageFilename, message, key, em) {
                     }
                 }
         }
-        else if(key.mode == "random"){
+        else if(key.mode === "random"){
             rndGenerator.seed(key.randomintervalSeed);
 
             let count = rndGenerator.intBetween(+key.randomintervalMin, +key.randomintervalMax);
@@ -88,11 +88,11 @@ function LSBemb(imageFilename, message, key, em) {
             for (var i = 0; i < image.bitmap.width; i++)
                 for (var j = 0; j < image.bitmap.height; j++) {
 
-                    if(amountOfBitsInMessage == n){
+                    if(amountOfBitsInMessage === n){
                         break outerRandom;
                     }
 
-                    if (count != 0) {
+                    if (count !== 0) {
                         count--;
                     }
                     else {
@@ -136,15 +136,15 @@ function sizeEstimate(image, message, key){
     const pixelsAmount = image.bitmap.width * image.bitmap.height;
     let pixelsAmountNeed = 0;
 
-    if(key.mode == "sequential"){
+    if(key.mode === "sequential"){
         pixelsAmountNeed = bitsAmount;
     }
-    else if(key.mode == "fixed"){
+    else if(key.mode === "fixed"){
         pixelsAmountNeed = bitsAmount * (+key.fixedIntervalAmount + 1);
     }
-    else if(key.mode == "random"){
+    else if(key.mode === "random"){
         rndGenerator.seed(key.randomintervalSeed);
-        var rndSum = 0;
+        let rndSum = 0;
         for (var i = 0; i < bitsAmount; i++) {
             rndSum += rndGenerator.intBetween(+key.randomintervalMin, +key.randomintervalMax);
         }
@@ -177,7 +177,7 @@ function stringToBin(message){
 
         var diff = BITS_PER_CHAR - binCharArr.length;
 
-        if (diff != 0) {
+        if (diff !== 0) {
             binCharArr = (Array(diff).fill(0)).concat(binCharArr); //[1,0,1,0] -> [0,0,0, 1,0,1,0]
         }
         resultBinArr = resultBinArr.concat(binCharArr);

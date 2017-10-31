@@ -8,13 +8,12 @@ $(document).ready(function(){
 
        var socket = new WebSocket("ws://localhost:" + webSocketPort);
 
-       socket.onopen = function(){ //connect was created
-           socket.send(" From client: start connection");
-           console.log("connect was created");
-       };
+       // socket.onopen = function(){ //connect was created
+       //     socket.send(" From client: start connection");
+       //     console.log("connect was created");
+       // };
 
        socket.onmessage = function(event){
-           console.log(event.data);
            extractingProgressBar.css("width", event.data + "%");
        };
 
@@ -22,8 +21,8 @@ $(document).ready(function(){
            socket.close();
        });
 
-       socket.onclose = function () {
-           alert("Disconnected");
-       }
+       // socket.onclose = function () {
+       //     alert("Disconnected");
+       // }
    }
 });

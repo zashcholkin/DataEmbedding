@@ -111,14 +111,14 @@ function createKey(req){
 
     const intervalMode = req.body["interval-mode"]; //sequential|fixed|random
 
-    if(intervalMode == "sequential"){
+    if(intervalMode === "sequential"){
         key.mode = "sequential";
     }
-    else if(intervalMode == "fixed"){
+    else if(intervalMode === "fixed"){
         key.mode = "fixed";
         key.fixedIntervalAmount = req.body["finterval-amount"];
     }
-    else if(intervalMode == "random"){
+    else if(intervalMode === "random"){
         key.mode = "random";
         key.randomintervalMin = req.body["rinterval-min"];
         key.randomintervalMax = req.body["rinterval-max"];

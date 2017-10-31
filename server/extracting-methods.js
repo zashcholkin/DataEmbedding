@@ -8,7 +8,7 @@ function LSBextr(imageFilename, key, em, wsHandler) {
 
     const messageBinArr = [];
 
-    var progressValue = 0;
+    let progressValue = 0;
 
     jimp.read(sourcePath, function (err, image) {
         if (err) throw err;
@@ -18,7 +18,7 @@ function LSBextr(imageFilename, key, em, wsHandler) {
         const binMessageLengthArr = [];
         let messageLengthReady = false;
 
-        if(key.mode == "sequential") {
+        if(key.mode === "sequential") {
             let n = 0;
             outer:
                 for (var i = 0; i < image.bitmap.width; i++)
@@ -63,7 +63,7 @@ function LSBextr(imageFilename, key, em, wsHandler) {
                     }
 
         }
-        else if(key.mode == "fixed"){
+        else if(key.mode === "fixed"){
             let n=0;
             let count = key.fixedIntervalAmount;
 
@@ -115,7 +115,7 @@ function LSBextr(imageFilename, key, em, wsHandler) {
                         }
                     }
         }
-        else if(key.mode == "random"){
+        else if(key.mode === "random"){
             let n = 0;
             rndGenerator.seed(key.randomintervalSeed);
             let count = rndGenerator.intBetween(+key.randomintervalMin, +key.randomintervalMax);
@@ -125,7 +125,7 @@ function LSBextr(imageFilename, key, em, wsHandler) {
             outer:
                 for (var i = 0; i < image.bitmap.width; i++)
                     for (var j = 0; j < image.bitmap.height; j++) {
-                        if (count != 0) {
+                        if (count !== 0) {
                             count--
                         }
                         else {
