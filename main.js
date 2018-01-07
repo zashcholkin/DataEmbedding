@@ -3,6 +3,7 @@ const events = require("events");
 const embeddingMethods = require("./server/embedding-methods");
 const extractingMethods = require("./server/extracting-methods");
 const webSocketServer = require("ws");
+const fs = require("fs");
 
 const app = express();
 const port = 3000;
@@ -22,7 +23,11 @@ wss.on("close", function () {
 const multer = require("multer");
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, "uploads/")
+        const destDir = "uploads/";
+        fs.mkdir(destDir, function(err){
+            cb(null, destDir);
+        });
+
     },
     filename: function (req, file, cb) {
 

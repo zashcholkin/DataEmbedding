@@ -1,4 +1,5 @@
 const jimp = require("jimp");
+const fs = require("fs");
 const rndGenerator = require("random-seed").create();
 const BITS_PER_CHAR = require("./config").config.BITS_PER_CHAR;
 const BITS_FOR_MESSAGE_LENGTH = require("./config").config.BITS_FOR_MESSAGE_LENGTH;
@@ -116,10 +117,13 @@ function LSBemb(imageFilename, message, key, em) {
                 }
 
         }
-
-        image.write(__dirname + "/../result-images/" + imageFilename, function(err){
-            em.emit("embedReady", imageFilename);
+        const dirResultImages = __dirname + "/../result-images/";
+        fs.mkdir(dirResultImages, function(err){
+            image.write(dirResultImages + imageFilename, function(err){
+                em.emit("embedReady", imageFilename);
+            });
         });
+
     });
 }
 
